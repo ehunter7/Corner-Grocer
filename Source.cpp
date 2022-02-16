@@ -4,7 +4,7 @@
 #include <Windows.h>
 #include <cmath>
 #include <string>
-
+#include "Menu.h"
 using namespace std;
 
 /*
@@ -17,7 +17,7 @@ Output:
 Return:
 	None
 */
-void CallProcedure(string pName)
+void CallProcedure(const string& pName)
 {
 	char* procname = new char[pName.length() + 1];
 	std::strcpy(procname, pName.c_str());
@@ -138,12 +138,33 @@ int callIntFunc(string proc, int param)
 
 	return _PyLong_AsInt(presult);
 }
+void test(int i);
 
+void test2(string tmp) {
+	cout << tmp << endl;
+}
 
-void main()
+int main()
 {
 	CallProcedure("printsomething");
 	cout << callIntFunc("PrintMe", "House") << endl;
 	cout << callIntFunc("SquareValue", 2);
 
+
+
+	//Adds menu options to the Menu object
+	Menu::Push("number of times each individual item appears", CallProcedure, "AmountOfEachItem");
+
+
+	Menu::DisplayMenu();
+
+	Menu::HandleUserInput(Menu::GetUserInput());
+
+
+	return 0;
 }
+
+void test(int i) {
+	cout << "test" << i << endl;
+}
+
