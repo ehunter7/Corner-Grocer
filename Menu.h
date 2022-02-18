@@ -21,8 +21,11 @@
 struct Item {
 	std::string m_title;
 	void(*m_Callback)(const std::string& pName);
+	void(*m_ExitCallback)(bool& exitCondtion);
+	void(*m_CallbackNoString)();
 	std::string m_pName;
 	int m_Index;
+	bool m_exitCondition = NULL;
 };
 
 /*
@@ -49,8 +52,13 @@ public:
 
 	//Static function map to internal functions.
 
+	static void Push(const std::string& title);
+
+	static void Push(const std::string& title, void(*callback)());
+
+
 	//Maps to IPush
-	static void Push(const std::string& item, void(*callback)(const std::string& pName), const std::string& pName);
+	static void Push(const std::string& title, void(*callback)(const std::string& pName), const std::string& pName);
 
 	//Maps to IDisplayMenu
 	static void DisplayMenu();
@@ -70,6 +78,12 @@ private:
 
 	//Internal function calls used to clean up fucntion calls in main.
 
+	void IPush(const std::string& title);
+
+	void IPush(const std::string& title, void(*callback)());
+
+
+
 	// ################################################################
 	// @par Name
 	// IPush
@@ -85,6 +99,7 @@ private:
 	// The 'I' in the function name is to indicate that it is an internal function
 	// ################################################################
 	void IPush(const std::string& title, void(*callback)(const std::string& pName), const std::string& pName);
+
 
 	// ################################################################
 	// @par Name

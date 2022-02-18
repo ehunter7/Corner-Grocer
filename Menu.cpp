@@ -15,10 +15,22 @@ Menu& Menu::Get()
 	return instance;
 }
 
+void Menu::Push(const std::string& title)
+{
+	return Get().IPush(title);
+}
+
+void Menu::Push(const std::string& item, void(*callback)())
+{
+	return Get().IPush(item, callback);
+}
+
+
 void Menu::Push(const std::string& item, void(*callback)(const std::string& pName), const std::string& pName)
 {
 	return Get().IPush(item, callback, pName);
 }
+
 
 void Menu::DisplayMenu()
 {
@@ -33,6 +45,46 @@ int Menu::GetUserInput()
 void Menu::HandleUserInput(const int& input){
 	return Get().IHandleUserInput(input);
 }
+
+void Menu::IPush(const std::string& title)
+{
+	//Declares new struct object
+	Item* tmpItem = new Item();
+
+	//Sets the title of the menu item
+	tmpItem->m_title = title;
+
+	//Sets the index of the menu item
+	tmpItem->m_Index = this->m_Items.size() + 1;
+
+	//Adds the new object to the vector of menu items
+	this->m_Items.push_back(*tmpItem);
+
+	//Deletes the allocated memory of the the struct object
+	delete tmpItem;
+}
+
+void Menu::IPush(const std::string& title, void(*callback)())
+{
+	//Declares new struct object
+	Item* tmpItem = new Item();
+
+	//Sets the title of the menu item
+	tmpItem->m_title = title;
+
+	//Sets the callback function
+	tmpItem->m_CallbackNoString = callback;
+
+	//Sets the index of the menu item
+	tmpItem->m_Index = this->m_Items.size() + 1;
+
+	//Adds the new object to the vector of menu items
+	this->m_Items.push_back(*tmpItem);
+
+	//Deletes the allocated memory of the the struct object
+	delete tmpItem;
+}
+
 
 void Menu::IPush(const std::string& title, void(*callback)(const std::string& pName), const std::string& pName)
 {
@@ -56,6 +108,8 @@ void Menu::IPush(const std::string& title, void(*callback)(const std::string& pN
 	//Deletes the allocated memory of the the struct object
 	delete tmpItem;
 }
+
+
 
 void Menu::IDisplayMenu() const
 {
@@ -132,6 +186,17 @@ int Menu::IGetUserSelection()
 }
 
 void Menu::IHandleUserInput(const int& input) {
-	m_Items.at(input - 1).m_Callback(m_Items.at(input - 1).m_pName);
+
+	int index = input - 1;
+	if(m_Items.at(index).m_pName != "") {
+
+		 m_Items.at(index).m_Callback(m_Items.at(index).m_pName);
+	}
+	else {
+
+		m_Items.at(index).m_CallbackNoString();
+	}
+
+	
 }
 

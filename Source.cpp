@@ -4,8 +4,14 @@
 #include <Windows.h>
 #include <cmath>
 #include <string>
+#include <fstream>
+
 #include "Menu.h"
 using namespace std;
+
+void DisplayHistogram();
+void GetFrequencyOfItem();
+
 
 /*
 Description:
@@ -138,33 +144,88 @@ int callIntFunc(string proc, int param)
 
 	return _PyLong_AsInt(presult);
 }
-void test(int i);
-
-void test2(string tmp) {
-	cout << tmp << endl;
-}
 
 int main()
 {
-	CallProcedure("printsomething");
-	cout << callIntFunc("PrintMe", "House") << endl;
-	cout << callIntFunc("SquareValue", 2);
-
 
 
 	//Adds menu options to the Menu object
-	Menu::Push("number of times each individual item appears", CallProcedure, "AmountOfEachItem");
+	Menu::Push("Number of times each individual item appears", CallProcedure, "amount_of_each_item");
+	Menu::Push("Number of times an individual item appears", GetFrequencyOfItem);
+	Menu::Push("Generate Histogram", DisplayHistogram);
+	Menu::Push("Exit");
 
+	while (true) {
 
-	Menu::DisplayMenu();
+		Menu::DisplayMenu();
 
-	Menu::HandleUserInput(Menu::GetUserInput());
+		int input = Menu::GetUserInput();
 
+		if (input == 4) break;
+
+		Menu::HandleUserInput(input);
+	}
 
 	return 0;
 }
 
-void test(int i) {
-	cout << "test" << i << endl;
+void GetFrequencyOfItem() {
+
+	string userInput;
+
+	cout << "Enter item to search for: ";
+	cin >> userInput;
+
+	int temp = callIntFunc("frequency_of_item", userInput);
+
+	cout << temp << endl;
 }
+
+void DisplayHistogram() {
+
+
+	CallProcedure("file_data");
+
+	//Temp variables to hold data read from 
+	string name;
+	int temp;
+
+	string fileName = "frequency.dat";
+	
+	//Open an input file stream
+	ifstream temperatures;
+
+	//Opens file passed to the function
+	temperatures.open(fileName);
+
+	//If statement checks if file has been opened
+	if (!temperatures.is_open()) {
+
+		cout << fileName << " could not be opened for reading" << endl;
+
+		//Throw statement exits function
+		throw exception("Program exiting");
+	}
+	//If file was opened, proceed with reading from file
+	else {
+
+		//While not at end of file
+		while (!temperatures.fail()) {
+
+			//Get the city name from file
+			temperatures >> name;
+
+			//Get the city temp from file
+			temperatures >> temp;
+
+			cout << flush << name << setw(15 - name.length()) << setfill(' ')  << " ";
+			cout << setw(temp + 1) << setfill('*') << "\n";
+
+		}
+	}
+
+	//Closes file after reading
+	temperatures.close();
+}
+
 
