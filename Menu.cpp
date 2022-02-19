@@ -136,7 +136,7 @@ void Menu::IDisplayMenu() const
 		}
 	}
 
-	std::cout << std::endl;
+	
 
 	//Bottom border
 	std::cout << std::setfill('~') << std::setw(46) << "\n";

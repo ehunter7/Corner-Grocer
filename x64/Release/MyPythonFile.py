@@ -37,11 +37,17 @@ def amount_of_each_item():
     for key in collection:
         print( key, collection[key] )
 
+    print("\n")
+
 
 def frequency_of_item(userInput):
 
     file_data()
- 
-    return collection.get(userInput)
+    if collection.get(userInput):
+        return collection.get(userInput)
+    else:
+        return -1
+
+    
 
 

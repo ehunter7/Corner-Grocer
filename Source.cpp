@@ -147,10 +147,8 @@ int callIntFunc(string proc, int param)
 
 int main()
 {
-
-
 	//Adds menu options to the Menu object
-	Menu::Push("Number of times each individual item appears", CallProcedure, "amount_of_each_item");
+	Menu::Push("Number of times each item appears", CallProcedure, "amount_of_each_item");
 	Menu::Push("Number of times an individual item appears", GetFrequencyOfItem);
 	Menu::Push("Generate Histogram", DisplayHistogram);
 	Menu::Push("Exit");
@@ -160,6 +158,10 @@ int main()
 		Menu::DisplayMenu();
 
 		int input = Menu::GetUserInput();
+
+		cout << setw(46) << setfill('~') << "\n";
+
+		cout << endl;
 
 		if (input == 4) break;
 
@@ -172,13 +174,27 @@ int main()
 void GetFrequencyOfItem() {
 
 	string userInput;
+	int shuttle = -1;
 
-	cout << "Enter item to search for: ";
-	cin >> userInput;
+	while (shuttle == -1) {
 
-	int temp = callIntFunc("frequency_of_item", userInput);
+		cout << "Enter item to search for: ";
+		cin >> userInput;
 
-	cout << temp << endl;
+		userInput[0] = toupper(userInput[0]);
+
+		shuttle = callIntFunc("frequency_of_item", userInput);
+
+		if (shuttle == -1) {
+			cout << "The Item you have searched for is not on the list. ";
+			cout << "Please try again." << endl;
+		}
+	}
+
+	cout << userInput << " appear on the list " << shuttle << " times." << endl;
+
+	//New line for readability
+	cout << endl;
 }
 
 void DisplayHistogram() {
@@ -223,6 +239,8 @@ void DisplayHistogram() {
 
 		}
 	}
+
+	cout << endl;
 
 	//Closes file after reading
 	temperatures.close();
