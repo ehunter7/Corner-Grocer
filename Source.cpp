@@ -9,9 +9,9 @@
 #include "Menu.h"
 using namespace std;
 
+//Function declarations
 void DisplayHistogram();
 void GetFrequencyOfItem();
-
 
 /*
 Description:
@@ -153,18 +153,24 @@ int main()
 	Menu::Push("Generate Histogram", DisplayHistogram);
 	Menu::Push("Exit");
 
+	//infinite loop runsuntil user enters 4 to exit program
 	while (true) {
 
 		Menu::DisplayMenu();
 
+		//Gets the users menu selection as stores it as input
 		int input = Menu::GetUserInput();
 
+		//Border used for readability and seperation
 		cout << setw(46) << setfill('~') << "\n";
 
+		//New Line for rewadability
 		cout << endl;
 
+		//If user has selected exit then exit
 		if (input == 4) break;
 
+		//Takes the users menu input and handles it. 
 		Menu::HandleUserInput(input);
 	}
 
@@ -173,24 +179,33 @@ int main()
 
 void GetFrequencyOfItem() {
 
+	//Variable userInput that users entered value 
 	string userInput;
+
+	//Shuttle holds the value returned from python code, set to -1 until item is found
 	int shuttle = -1;
 
+	//While the item the user is searching for is not found. 
 	while (shuttle == -1) {
 
+		//Prompt user to enter value
 		cout << "Enter item to search for: ";
 		cin >> userInput;
 
+		//Capitalizes the first letter of the entered to match stored data
 		userInput[0] = toupper(userInput[0]);
 
+		//Shuttle is set to the number of times item is found in list
 		shuttle = callIntFunc("frequency_of_item", userInput);
 
+		//If returned value is -1 item wasnt found
 		if (shuttle == -1) {
 			cout << "The Item you have searched for is not on the list. ";
 			cout << "Please try again." << endl;
 		}
 	}
 
+	//Prompt to let user know how many times item appears on list
 	cout << userInput << " appear on the list " << shuttle << " times." << endl;
 
 	//New line for readability
@@ -199,23 +214,23 @@ void GetFrequencyOfItem() {
 
 void DisplayHistogram() {
 
-
+	//Calls python function to pull data from file and store as a dictionary
 	CallProcedure("file_data");
 
-	//Temp variables to hold data read from 
+	//Temperary variables to hold data read from 
 	string name;
-	int temp;
+	int amount;
 
 	string fileName = "frequency.dat";
 	
 	//Open an input file stream
-	ifstream temperatures;
+	ifstream itemList;
 
 	//Opens file passed to the function
-	temperatures.open(fileName);
+	itemList.open(fileName);
 
 	//If statement checks if file has been opened
-	if (!temperatures.is_open()) {
+	if (!itemList.is_open()) {
 
 		cout << fileName << " could not be opened for reading" << endl;
 
@@ -226,24 +241,26 @@ void DisplayHistogram() {
 	else {
 
 		//While not at end of file
-		while (!temperatures.fail()) {
+		while (!itemList.fail()) {
 
 			//Get the city name from file
-			temperatures >> name;
+			itemList >> name;
 
 			//Get the city temp from file
-			temperatures >> temp;
+			itemList >> amount;
 
+			//Histogram output
 			cout << flush << name << setw(15 - name.length()) << setfill(' ')  << " ";
-			cout << setw(temp + 1) << setfill('*') << "\n";
+			cout << setw(amount + 1) << setfill('*') << "\n";
 
 		}
 	}
 
+	//New Line for readability
 	cout << endl;
 
 	//Closes file after reading
-	temperatures.close();
+	itemList.close();
 }
 
 

@@ -110,7 +110,6 @@ void Menu::IPush(const std::string& title, void(*callback)(const std::string& pN
 }
 
 
-
 void Menu::IDisplayMenu() const
 {
 	//Creates a top border of the menu
@@ -127,6 +126,7 @@ void Menu::IDisplayMenu() const
 	//Promts the user what to enter as a selection
 	std::cout << "Enter your selection as a number ";
 	
+	//informs the user how to enter options of menu items. 
 	for (int i = 1; i <= this->m_Items.size(); i++) {
 		if (i != this->m_Items.size()) {
 			std::cout << i << ", ";
@@ -135,8 +135,6 @@ void Menu::IDisplayMenu() const
 			std::cout << "or " << i << "." << std::endl;
 		}
 	}
-
-	
 
 	//Bottom border
 	std::cout << std::setfill('~') << std::setw(46) << "\n";
@@ -187,13 +185,17 @@ int Menu::IGetUserSelection()
 
 void Menu::IHandleUserInput(const int& input) {
 
+	//sets input to 0 basded index
 	int index = input - 1;
+
+	//If menu item does not have string function added
 	if(m_Items.at(index).m_pName != "") {
 
+		//call functin and pass string as param
 		 m_Items.at(index).m_Callback(m_Items.at(index).m_pName);
 	}
 	else {
-
+		//Otherwise call function that does not take string param 
 		m_Items.at(index).m_CallbackNoString();
 	}
 
