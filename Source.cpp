@@ -1,4 +1,8 @@
-
+// ##################################################
+// File: source.h
+// Author: Eric Hunter
+// Date: February 18, 2022
+// ##################################################
 #include <Python.h>
 #include <iostream>
 #include <Windows.h>
